@@ -1,5 +1,7 @@
 # Use postgres/example user/password credentials
 
+name: task-management-system
+
 services:
   django:
     container_name: django-tms
@@ -9,11 +11,14 @@ services:
       dockerfile: Dockerfile
     env_file: .env.sample
     networks:
-      - task-management-system
+      - tms
     ports:
       - "8000:8000"
     depends_on:
       db:
+        condition: service_healthy
+        restart: true
+      cache:
         condition: service_healthy
         restart: true
 
@@ -35,7 +40,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
     networks:
-      - task-management-system
+      - tms
     volumes:
       - dbv:/var/lib/postgresql/data
     healthcheck:
@@ -44,15 +49,31 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+    #############################################################################################
+    # ___SI QUEREMOS QUE SE PUEDA CONECTAR A LA BASE DE DATOS DESDE EL HOST DIRECTAMENTE___
+    #    port:
+    #      - "5432:5432"
+    #############################################################################################
 
-#  adminer:
-#    image: adminer
-#    restart: always
-#    ports:
-#      - 8080:8080
+  cache:
+    image: redis:8.2.1-alpine
+    container_name: redis-tms
+    networks:
+      - tms
+    #############################################################################################
+    # ___SI QUEREMOS QUE SE PUEDA CONECTAR A LA MONITORIZAR REDIS DESDE EL HOST DIRECTAMENTE___
+    #    port:
+    #      - "6379:6379"
+    #############################################################################################
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
-  task-management-system: {}
+  tms: {}
 
 volumes:
   dbv:
+  cache:

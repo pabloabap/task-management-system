@@ -130,12 +130,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #___PENDIENTE DE CONFIGURAR - REDIS CACHE___
-#CACHES = {
-#    'default':{
-#        'BACKEND': 'django_redis.cache.RedisCache',
-#        'LOCATION': 'unique-snowflake',
-#        'OPTIONS': {
-#            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#        }
-#    }
-#}
+CACHES = {
+    'default':{
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'cache',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
