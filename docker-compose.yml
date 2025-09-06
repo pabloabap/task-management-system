@@ -3,25 +3,23 @@
 name: task-management-system
 
 services:
-  django:
-    container_name: django-tms
-    image: django:task-management-system
-    build:
-      context: ./django_backend
-      dockerfile: Dockerfile
-    env_file: .env.sample
+  cache:
+    image: redis:8.2.1-alpine
+    restart: always
+    container_name: redis-tms
     networks:
       - tms
-    ports:
-      - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
-        restart: true
-      cache:
-        condition: service_healthy
-        restart: true
-
+    #############################################################################################
+    # ___SI QUEREMOS QUE SE PUEDA CONECTAR A LA MONITORIZAR REDIS DESDE EL HOST DIRECTAMENTE___
+    #    port:
+    #      - "6379:6379"
+    #############################################################################################
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
   db:
     image: postgres:17.6
     container_name: psql-tms
@@ -55,21 +53,57 @@ services:
     #      - "5432:5432"
     #############################################################################################
 
-  cache:
-    image: redis:8.2.1-alpine
-    container_name: redis-tms
+  django:
+    container_name: django-tms
+    image: tms-base
+    build:
+      context: ./django_backend
+      dockerfile: Dockerfile
+    env_file: .env.sample
     networks:
       - tms
-    #############################################################################################
-    # ___SI QUEREMOS QUE SE PUEDA CONECTAR A LA MONITORIZAR REDIS DESDE EL HOST DIRECTAMENTE___
-    #    port:
-    #      - "6379:6379"
-    #############################################################################################
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./django_backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+      cache:
+        condition: service_healthy
+        restart: true
+    # Retornará cero si el servicio está corriendo.
     healthcheck:
-      test: redis-cli ping
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "python manage.py check --deploy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  celery:
+    container_name: celery-tms
+    image: tms-base
+    build:
+      context: ./django_backend
+      dockerfile: Dockerfile
+    command: celery --app=config worker -l INFO
+    env_file: .env.sample
+    networks:
+      - tms
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+      cache:
+        condition: service_healthy
+        restart: true
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A config inspect ping -t 5 2>/dev/null | grep -q pong"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   tms: {}

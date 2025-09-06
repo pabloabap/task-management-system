@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-env
 echo "Migrate..."
 python manage.py migrate
 echo "Runserver..."

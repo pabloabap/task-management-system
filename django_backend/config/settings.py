@@ -38,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.users',
+    'apps.tasks',
 ]
+
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
             ],
         },
     },
@@ -139,3 +144,6 @@ CACHES = {
         }
     }
 }
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'redis://cache:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_BACKEND', 'redis://cache:6379/0')
