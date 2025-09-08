@@ -49,7 +49,7 @@ class Task(models.Model):
 	actual_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	# Relationships
 	created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_tasks')
-	assigned_to = models.ManyToManyField(settings.AUTH_USER_MODEL, default=None)
+	assigned_to = models.ManyToManyField(settings.AUTH_USER_MODEL, default=None, related_name='assigned_tasks')
 	tags = models.ManyToManyField(Tag, blank=True)
 	parent_task = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 	# Metadata
@@ -81,7 +81,7 @@ class TaskAssignment(models.Model):
 	task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='assignments')
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='task_assignments')
 	assigned_at = models.DateTimeField(auto_now_add=True)
-	assigned_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_tasks')
+	assigned_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='tasks_assigned')
 
 	def __str__(self):
 		return f"{self.user} assigned to {self.task} at {self.assigned_at}"

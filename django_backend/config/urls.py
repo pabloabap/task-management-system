@@ -1,7 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-
-from django.urls import path, include
 from rest_framework import routers, serializers, viewsets
 from . import settings
 from django.contrib.auth import get_user_model
@@ -26,6 +24,10 @@ urlpatterns = [
     path('tasks/', include('apps.tasks.urls')),
     path('users/', include('apps.users.urls')),
     path('api/', include('apps.api.urls')),
-#    path('api/', include('rest_framework.urls', namespace='rest_framework')),	
-#    path('api/', include(router.urls)),	
+	path("api/auth/", include('rest_framework.urls')),
+
+#   path('api/', include('rest_framework.urls', namespace='rest_framework')),	
+#   path('api/', include(router.urls)),
+#  	path("auth/", include('rest_framework.urls')),
+
 ]
