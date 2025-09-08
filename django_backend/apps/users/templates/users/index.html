@@ -1,0 +1,9 @@
+{% if latest_users %}
+    <ul>
+    {% for user in latest_users %}
+        <li><a href="{% url 'users:index' %}">{{ user.email }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No user are available.</p>
+{% endif %}
