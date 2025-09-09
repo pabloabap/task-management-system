@@ -7,6 +7,7 @@ all api logics grouped.
 - Complete authentication system: Crucial to interact with the solution and log users interactions. The user can register, login and logout but refresh wasn't implemented as we implement BaseAuthentication, not TokenAuthentication.
 - CRUD endpoints: All User Management and Task Management endpoints are implemented, go to [API_DOCUMENTATION](./API_DOCUMENTATION.md) to see details. Task Operations weren't implemented because a lack of time.
 - Basic frontend UI: `/tasks` and `/tasks/{int:id}` has a very humble HTML to see a list of tasks and task deatails.
+- Celery email notification task to inform about tasks changes.
 
 # Features skipped and why
 Because of lack of time I couldn't implement:
