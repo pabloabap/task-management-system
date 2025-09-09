@@ -51,6 +51,7 @@ services:
     build:
       context: ./django_backend
       dockerfile: Dockerfile
+    restart: always
     env_file: .env.sample
     networks:
       - tms
@@ -69,6 +70,9 @@ services:
       cache:
         condition: service_healthy
         restart: true
+      mailhog:
+        condition: service_healthy
+        restart: true
     healthcheck:
       test: ["CMD-SHELL", "python manage.py check --deploy"]
       interval: 30s
@@ -82,6 +86,7 @@ services:
     build:
       context: ./django_backend
       dockerfile: Dockerfile
+    restart: always
     command: celery --app=config worker -l INFO
     env_file: .env.sample
     networks:
@@ -91,6 +96,9 @@ services:
         condition: service_healthy
         restart: true
       cache:
+        condition: service_healthy
+        restart: true
+      mailhog:
         condition: service_healthy
         restart: true
     healthcheck:
@@ -103,11 +111,20 @@ services:
   mailhog:
     container_name: fake_email
     image: mailhog/mailhog:latest
+    restart: always
     ports:
       - 1025:1025
       - 8025:8025
     networks:
       - tms
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "1025"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
 
 networks:
   tms: {}
