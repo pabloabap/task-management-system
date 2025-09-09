@@ -9,11 +9,11 @@ services:
     container_name: redis-tms
     networks:
       - tms
-    #############################################################################################
-    # ___SI QUEREMOS QUE SE PUEDA CONECTAR A LA MONITORIZAR REDIS DESDE EL HOST DIRECTAMENTE___
-    #    port:
-    #      - "6379:6379"
-    #############################################################################################
+  #############################################################################################
+  # ___Option to conect throught this port from host machine___
+  # port:
+  #   - "6379:6379"
+  #############################################################################################
     healthcheck:
       test: redis-cli ping
       interval: 5s
@@ -24,15 +24,7 @@ services:
     image: postgres:17.6
     container_name: psql-tms
     restart: always
-    # set shared memory limit when using docker compose
     shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
-    #volumes:
-    #  - type: tmpfs
-    #    target: /dev/shm
-    #    tmpfs:
-    #      size: 134217728 # 128*2^20 bytes = 128Mb
-    # env_file: .env.sample
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -47,11 +39,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
-    #############################################################################################
-    # ___SI QUEREMOS QUE SE PUEDA CONECTAR A LA BASE DE DATOS DESDE EL HOST DIRECTAMENTE___
-    #    port:
-    #      - "5432:5432"
-    #############################################################################################
+  #############################################################################################
+  # ___Option to conect throught this port from host machine___    
+  # port:
+  #   - "5432:5432"
+  #############################################################################################
 
   django:
     container_name: django-tms
@@ -64,8 +56,12 @@ services:
       - tms
     ports:
       - "8000:8000"
-    volumes:
-      - ./django_backend:/app
+  #################################################################################################
+  # ___Option to create a bind mount to modify Django container files from the host.
+  #   the container will reload automatically to intengrate any change.___
+  #  volumes:
+  #    - ./django_backend:/app
+  #################################################################################################
     depends_on:
       db:
         condition: service_healthy
@@ -73,7 +69,6 @@ services:
       cache:
         condition: service_healthy
         restart: true
-    # Retornará cero si el servicio está corriendo.
     healthcheck:
       test: ["CMD-SHELL", "python manage.py check --deploy"]
       interval: 30s

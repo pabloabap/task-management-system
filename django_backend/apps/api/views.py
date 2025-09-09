@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from ..users.models import User
-from .serializers import UserSerializer, UserDetailSerializer, TaskSerializer
+from .serializers import UserSerializer, UserDetailSerializer, UserRegisterSerializer, TaskSerializer
 from .paginators import UserPagination, TaskPagination
 from ..tasks.models import Task
 from rest_framework.views import APIView
@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class register(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserRegisterSerializer
             
 class users_list(generics.ListAPIView):
     queryset = User.objects.all()
@@ -48,7 +48,7 @@ class me(generics.RetrieveAPIView):
     '''
         Return authenticated user or 403.
     '''
-    serializer_class = UserSerializer
+    serializer_class = UserDetailSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):

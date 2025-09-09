@@ -5,11 +5,20 @@ a single django container, adding PostgreSQL migrating the database to it to sta
 - Django project structure, model and migration: Once infrastructure was ready I continued with this step as is crucial to have a project structure and a data model working garantee a good performance of the rest of the solution. I followed the sugestion of test subject but I decided to also include `api` folder inside `apps` folder  to have
 all api logics grouped.
 - Complete authentication system: Crucial to interact with the solution and log users interactions. The user can register, login and logout but refresh wasn't implemented as we implement BaseAuthentication, not TokenAuthentication.
-- CRUD endpoints: All User Management endpoints are available. Task Management endpoints are almost implemented, go to [API_DOCUMENTATION](./API_DOCUMENTATION.md) to see which ones. The other ones weren't implemented because a lack of time.
+- CRUD endpoints: All User Management and Task Management endpoints are implemented, go to [API_DOCUMENTATION](./API_DOCUMENTATION.md) to see details. Task Operations weren't implemented because a lack of time.
 - Basic frontend UI: '/tasks' and '/tasks/{int:id}' has a very humble HTML to see a list of tasks and task deatails.
 
 # Features skipped and why
+Because of lack of time I couldn't implement:
+- Basic API and frontend tests.
+- Celery tasks and scheduled jobs.
+- Filteringn and search API functionalities
+- Frontend forms to create tasks.
+- Kafka and Flask microservices.
+- Performance optimizations.
+- Deep testing.
 
+This lack of time was mainly caused by an unknowledge of the technologies that push me to speend a lot of time investigating about their user.
 
 
 # Time allocation breakdown
@@ -27,6 +36,14 @@ creating `tasks` model, views, urls and templates, understanging `settings.py` f
 Some of the decission that I took were use the same base image for Djanfo and Celery with a different entrypoint command as the base of both is Python and some libraries. A part from that I switched the docker image `python:3.13.7` to `python:3.11-slim` to reduce timmings on image construction, moving from 90.7s to 32.9s and from 1.16GB image to 183MB.
 
 
+Important to user CSRF cookie when submit  login from culr command to accept login.
+
+
+Almost all the project technologies were new for me. The most important challenges I found were to understand de usage and features of each framework and how to integrate them in a solution.
+
 # Trade-offs made
 # What you would add with more time
+I really miss to build a complete and usable solution. Basically finish all API endpoints, implement Celery automations and implement good frontend.
+
 # Justification for using Django templates for the frontend
+It is very usefull to use templates to render HTML pages on the fly with some dynamic fieds or areas of the page. Also they can be recycled and combined on demand.

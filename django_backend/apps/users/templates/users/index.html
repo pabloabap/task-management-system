@@ -1,9 +1,22 @@
 {% if latest_users %}
-    <ul>
-    {% for user in latest_users %}
-        <li><a href="{% url 'users:index' %}">{{ user.email }}</a></li>
-    {% endfor %}
-    </ul>
+<table border="1">
+	<thead>
+		<tr>
+			<th>User</th>
+			<th>User ID</th>
+			<th>Email</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for user in latest_users %}
+		<tr>
+			<td><a href="{% url 'users:index' %}">{{ user.id }}</a></td>
+			<td>{{ user.username }}</td>
+			<td>{{ user.email }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
 {% else %}
-    <p>No user are available.</p>
+  <p>No users are available.</p>
 {% endif %}
