@@ -28,7 +28,7 @@ official docummentations. Having said this I tried to follow the deployment time
 - Day 1 (Friday 5): Set up Dockerfile for Django and create a docker-compose.yml with PostgresSQL and Redis services available.
 - Day 2 (Saturday 6): Add Celery to docker-compose.yml and test the complete infrastructure. Understand Django MVT (Model View Template) architecture and first steps with it:
 creating `tasks` model, views, urls and templates, understanging `settings.py` file and making my first migrations.
-- Day 3 (Sunday 7): Build the other models required and understand Django Rest Framework. This day I didn't do a commit because there weren't any real progression at the project but a understanding of the framework (serializationS, views, viewsets, pagination, filtering, routing among others)
+- Day 3 (Sunday 7): Build the other models required and understand Django Rest Framework. This day I didn't do a commit because there weren't any real progression at the project but deep understanding of the framework (serializations, views, viewsets, pagination, filtering, routing among others)
 - Day 4 (Monday 8): I cleaned testing files created the day before to understand how to build the API's. Inside `apps/api` I built aathentication, user management and part of task management APIs endpoints.
 - Day 5 (Tuesday 9): Project revision, documentation, latests features progression on task management API and Celery first implementation `send_task_notification`. This notification alert all users about task changes.
 
