@@ -158,4 +158,10 @@ CACHES = {
 }
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'redis://cache:6379/0')
-CELERY_RESULT_BACKEND = os.environ.get('CELERY_BACKEND', 'redis://cache:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_BACKEND', 'redis://cache:6379/1')
+
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', "django.core.mail.backends.smtp.EmailBackend")
+EMAIL_HOST = os.environ.get('EMAIL_HOST', "mailhog")
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 1025)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', "")
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', "")

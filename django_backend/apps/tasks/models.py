@@ -63,6 +63,9 @@ class Task(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	is_archived = models.BooleanField(default=False)
 
+	class Meta:
+		ordering = ['-created_at']
+
 	def __str__(self):
 		return ( 
 			f"Title:			{self.title}\n"

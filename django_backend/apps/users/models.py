@@ -4,7 +4,8 @@ from django.conf import settings
 
 # Create your models here.
 class User(AbstractUser):
-	pass
+	class Meta:
+          ordering = ['id']
 class Team(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)

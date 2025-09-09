@@ -1,14 +1,14 @@
-from django.views.decorators.csrf import csrf_exempt
-from ..users.models import User
-from .serializers import UserSerializer, UserDetailSerializer, UserRegisterSerializer, TaskSerializer
-from .paginators import UserPagination, TaskPagination
-from ..tasks.models import Task
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAuthenticated
+
+from .tasks import send_task_notification
+from .serializers import UserSerializer, UserDetailSerializer, UserRegisterSerializer, TaskSerializer
+from .paginators import UserPagination, TaskPagination
+from ..users.models import User
+from ..tasks.models import Task
+
 
 class register(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -68,12 +68,16 @@ class tasks_list(mixins.CreateModelMixin,
     queryset = Task.objects.all()
     pagination_class = TaskPagination
     serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        response = self.create(request, *args, **kwargs)
+        send_task_notification.delay_on_commit(response.data.get('id'), "TASK_CREATION")
+        return response
     
 class task_details(mixins.RetrieveModelMixin,
               mixins.UpdateModelMixin,
@@ -96,10 +100,17 @@ class task_details(mixins.RetrieveModelMixin,
         serializer.save(created_by=self.request.user)
 
     def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+        response = self.retrieve(request, *args, **kwargs)
+        send_task_notification.delay_on_commit(response.data.get('id'), "TASK_CONSULTED")
+        return response
     def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        response = self.update(request, *args, **kwargs)
+        send_task_notification.delay_on_commit(response.data.get('id'), "TASK_UPDATED")
+        return response
     def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+        response = self.partial_update(request, *args, **kwargs)
+        send_task_notification.delay_on_commit(response.data.get('id'), "TASK_PATIALLY_UPDATED")
+        return response
     def delete(self, request, *args, **kwargs):
+        send_task_notification.delay_on_commit(None, "TASK_DELETED")
         return self.destroy(request, *args, **kwargs)

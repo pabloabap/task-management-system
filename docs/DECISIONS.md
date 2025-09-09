@@ -29,7 +29,7 @@ official docummentations. Having said this I tried to follow the deployment time
 creating `tasks` model, views, urls and templates, understanging `settings.py` file and making my first migrations.
 - Day 3 (Sunday 7): Build the other models required and understand Django Rest Framework. This day I didn't do a commit because there weren't any real progression at the project but a understanding of the framework (serializationS, views, viewsets, pagination, filtering, routing among others)
 - Day 4 (Monday 8): I cleaned testing files created the day before to understand how to build the API's. Inside `apps/api` I built aathentication, user management and part of task management APIs endpoints.
-- Day 5 (Tuesday 9): Project revision, documentation and latests features progression on task management API.
+- Day 5 (Tuesday 9): Project revision, documentation, latests features progression on task management API and Celery first implementation `send_task_notification`. This notification alert all users about task changes.
 
 # Technical challenges faced
 - Set up docker infrastructure from scratch, create `docker-compose-yml` and verify all containers communicate properly: I was focus on build light and solid infrastructure.
@@ -42,6 +42,11 @@ Important to user CSRF cookie when submit  login from culr command to accept log
 Almost all the project technologies were new for me. The most important challenges I found were to understand de usage and features of each framework and how to integrate them in a solution.
 
 # Trade-offs made
+To test Celery notifications via email without linking it with a real SMTP server **mailhog** service where added as microservice. Mailhog is a local SMTP server that intercept all email communications and show them in a ficticious mailbox. All generated emails can be visualized in `http://localhost:8025`.
+I thought it is a good enhancement as all users of the team can test this functionality without sharing personal credentials and lowering their personal email reputantion sending junk emails.
+
+Last day I priotirize the implementation of a Celery task than complete all API functionalities to demonstrate that I handeled all the types of tasks of mandatory part.
+
 # What you would add with more time
 I really miss to build a complete and usable solution. Basically finish all API endpoints, implement Celery automations and implement good frontend.
 

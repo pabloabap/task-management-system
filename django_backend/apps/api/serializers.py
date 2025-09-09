@@ -7,7 +7,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = User
-		fields = ['username', 'password']  # añade los campos que quieras mostrar
+		fields = ['email', 'username', 'password']  # añade los campos que quieras mostrar
 
 	def create(self, validated_data):
 
