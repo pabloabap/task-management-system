@@ -18,11 +18,16 @@ class Comment(models.Model):
 	)
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+	TAGS_CHOICES = [
+		('IT', 'IT'),
+		('FI', 'Finances'),
+		('SA', 'Sales'),
+	]
+	name = models.CharField(choices=TAGS_CHOICES, null=True)
+	created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return (
+	def __str__(self):
+		return (
 			f"Name:			{self.name}\n"
 			f"Created At:	{self.created_at}\n"
 		)
@@ -44,8 +49,8 @@ class Task(models.Model):
 	description = models.TextField()
 	status = models.CharField(choices=STATUS_CHOICES)
 	priority = models.CharField(choices=PRIORITY_CHOICES)
-	due_date = models.DateTimeField()
-	estimated_hours = models.DecimalField(max_digits=5, decimal_places=2)
+	due_date = models.DateTimeField(blank=True, null=True)
+	estimated_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	actual_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 	# Relationships
 	created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_tasks')
@@ -53,7 +58,7 @@ class Task(models.Model):
 	tags = models.ManyToManyField(Tag, blank=True)
 	parent_task = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 	# Metadata
-	metadata = models.JSONField(default=dict)
+	metadata = models.JSONField(default=dict, null=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	is_archived = models.BooleanField(default=False)
@@ -69,7 +74,7 @@ class Task(models.Model):
 			f"Actual Hours:		{self.actual_hours}	\n"
 			f"Created By:		{self.created_by}\n"
 			f"Assigned To:		{', '.join(user.username for user in self.assigned_to.all())}\n"
-			f"Tags:				{', '.join(tag.name for tag in self.tags.all())}\n"
+			f"Tags:			{', '.join(tag.name for tag in self.tags.all())}\n"
 			f"Parent Task:		{self.parent_task}\n"
 			f"Metadata:		{self.metadata}\n"
 			f"Created At:		{self.created_at}\n"
