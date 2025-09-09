@@ -10,7 +10,6 @@
  docker-compose up
  ```
  `.env.sample` contain variables `DEFAULT_SUPERUSER_` which define the superuser registered by default in the app. Feel free to modify it or login with it to interact with the app/api.
- `.env` is a link to `.env.sample` just to work directly with the variables defined on sample file but feel free to create another `.env`.
 
  ## ¿Do you want to change something on the fly?
  
